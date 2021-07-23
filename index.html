@@ -1,0 +1,38 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="exercise.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Library</title>
+  </head>
+  <body>
+    <!--Header-->
+    <header class="library-banner">
+      <h1>Welcome to the Library</h1>
+    </header>
+    <!--Header Ends-->
+    <!--Main-->
+    <main class="main">
+      <button class="add-new-book-btn">Add New Book</button>
+
+      <div class="container"></div>
+    </main>
+
+    <div id="addBookForm" class="modal form-disabled">
+      <form id="form">
+        <button type="button" id="close-btn">x</button>
+        <h3>Add Book</h3>
+        <input id="title" placeholder="Title" required />
+        <input id="author" placeholder="Author" required />
+        <input id="pages" placeholder="Pages" type="number" required />
+        <div class="is-read">
+          <label for="is-read">Read?</label>
+          <input id="isRead" type="checkbox" />
+        </div>
+        <button id="submit-btn" type="submit">Submit Book</button>
+      </form>
+    </div>
+  </body>
+</html>
