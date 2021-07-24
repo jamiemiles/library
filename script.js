@@ -1,11 +1,26 @@
-const myLibrary = [];
+let myLibrary = [];
+// Saves data to local storage.
+function saveLocalStorage() {
+  localStorage.setItem("books", JSON.stringify(myLibrary));
+}
+// Returns value of key in storage
+function restoreLocalStorage() {
+  const storageData = JSON.parse(localStorage.getItem("books"));
+
+  if (storageData) {
+    myLibrary = [];
+  }
+  for (let i = 0; i < storageData.length; i++) {
+    displayBookValues(storageData[i]);
+  }
+}
 
 // Object Constructor.
-function Book() {
-  this.title = document.getElementById("title").value;
-  this.author = document.getElementById("author").value;
-  this.pages = document.getElementById("pages").value;
-  this.isRead = document.getElementById("isRead").checked;
+function Book(title, author, pages, isRead) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.isRead = isRead;
 }
 
 // Loads addBookToLibrary once 'add new book' button is clicked.
@@ -23,18 +38,27 @@ closeFormBtn.addEventListener("click", () => {
   modal.classList.add("form-disabled");
 });
 
+const getBookFromInput = () => {
+  bTitle = document.getElementById("title").value;
+  bAuthor = document.getElementById("author").value;
+  bPages = document.getElementById("pages").value;
+  bRead = document.getElementById("isRead").checked;
+  return new Book(bTitle, bAuthor, bPages, bRead);
+};
+
 // Appends constructor instance to myLibrary array and calls display function.
 function submitForm() {
   const submitBookBtn = document.getElementById("submit-btn");
-  submitBookBtn.addEventListener("click", saveToLocalStorage);
   submitBookBtn.addEventListener("click", (e) => {
     modal.classList.remove("form-active");
     modal.classList.add("form-disabled");
+
     e.preventDefault(); // Stops page from refreshing.
-    const newBook = new Book();
+    const newBook = getBookFromInput();
+
     myLibrary.push(newBook);
+    saveLocalStorage();
     displayBookValues(newBook);
-    saveToLocalStorage(newBook);
   });
 }
 
@@ -74,9 +98,11 @@ function displayBookValues(newBook) {
   card.appendChild(removeBookBtn);
   card.appendChild(readBookBtn);
 
-  removeBook(removeBookBtn, card, newBook);
-  readStatus(readBookBtn);
-  saveToLocalStorage();
+  removeBookBtn.addEventListener(
+    "click",
+    removeBook(removeBookBtn, card, newBook)
+  );
+  readBookBtn.addEventListener("click", readStatus(readBookBtn));
 }
 
 // Removes book from array and ui.
@@ -89,7 +115,7 @@ function removeBook(deleteBookBtn, cardToDelete, newBook) {
       const index = myLibrary.indexOf(newBook);
       myLibrary.splice(index, 1);
       cardToDelete.remove();
-      saveToLocalStorage();
+      saveLocalStorage();
     }
   });
 }
@@ -106,12 +132,5 @@ function readStatus(readBookBtn) {
   });
 }
 
-// Saves data to local storage.
-function saveToLocalStorage() {
-  localStorage.setItem("books", JSON.stringify(myLibrary));
-  restoreLocalStorage();
-}
-const restoreLocalStorage = () => {
-  const storageData = JSON.parse(localStorage.getItem("books"));
-};
 submitForm();
+restoreLocalStorage();
