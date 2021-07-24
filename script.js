@@ -31,9 +31,10 @@ function submitForm() {
     modal.classList.remove("form-active");
     modal.classList.add("form-disabled");
     e.preventDefault(); // Stops page from refreshing.
-    let newBook = new Book();
+    const newBook = new Book();
     myLibrary.push(newBook);
     displayBookValues(newBook);
+    saveToLocalStorage(newBook);
   });
 }
 
@@ -62,7 +63,7 @@ function displayBookValues(newBook) {
 
   bookTitle.textContent = newBook.title;
   bookAuthor.textContent = newBook.author;
-  numberOfPages.textContent = newBook.pages;
+  numberOfPages.textContent = `${newBook.pages} Pages`;
   beenRead.textContent = newBook.read;
 
   container.appendChild(card);
@@ -80,7 +81,6 @@ function displayBookValues(newBook) {
 
 // Removes book from array and ui.
 function removeBook(deleteBookBtn, cardToDelete, newBook) {
-  console.log(myLibrary);
   deleteBookBtn.addEventListener("click", () => {
     if (
       deleteBookBtn.getAttribute("data-attribute") ===
@@ -107,15 +107,11 @@ function readStatus(readBookBtn) {
 }
 
 // Saves data to local storage.
-const saveToLocalStorage = () => {
-  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
-};
+function saveToLocalStorage() {
+  localStorage.setItem("books", JSON.stringify(myLibrary));
+  restoreLocalStorage();
+}
 const restoreLocalStorage = () => {
-  let storageData = JSON.parse(localStorage.getItem("myLibrary"));
-  if (storageData) {
-    storageData = JSON.parse(storageData);
-  } else {
-    storageData = {};
-  }
+  const storageData = JSON.parse(localStorage.getItem("books"));
 };
 submitForm();
