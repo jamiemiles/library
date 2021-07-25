@@ -1,4 +1,6 @@
 let myLibrary = [];
+restoreLocalStorage();
+
 // Saves data to local storage.
 function saveLocalStorage() {
   localStorage.setItem("books", JSON.stringify(myLibrary));
@@ -6,12 +8,13 @@ function saveLocalStorage() {
 // Returns value of key in storage
 function restoreLocalStorage() {
   const storageData = JSON.parse(localStorage.getItem("books"));
-
-  if (storageData) {
-    myLibrary = [];
-  }
-  for (let i = 0; i < storageData.length; i++) {
-    displayBookValues(storageData[i]);
+  if (storageData === null) {
+    return;
+  } else {
+    for (let i = 0; i < storageData.length; i++) {
+      myLibrary.push(storageData[i]);
+      displayBookValues(storageData[i]);
+    }
   }
 }
 
@@ -55,7 +58,6 @@ function submitForm() {
 
     e.preventDefault(); // Stops page from refreshing.
     const newBook = getBookFromInput();
-
     myLibrary.push(newBook);
     saveLocalStorage();
     displayBookValues(newBook);
@@ -133,4 +135,3 @@ function readStatus(readBookBtn) {
 }
 
 submitForm();
-restoreLocalStorage();
