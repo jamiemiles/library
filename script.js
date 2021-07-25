@@ -105,6 +105,19 @@ function displayBookValues(newBook) {
     removeBook(removeBookBtn, card, newBook)
   );
   readBookBtn.addEventListener("click", readStatus(readBookBtn));
+  readBtnChecked(readBookBtn, newBook);
+}
+
+// Check if read button is checked and display read status accordingly
+function readBtnChecked(readBookBtn, newBook) {
+  const read = document.getElementById("isRead");
+  if (!read.checked) {
+    newBook.isRead = false;
+    readBookBtn.textContent = "Not Read";
+  } else {
+    newBook.isRead = true;
+    readBookBtn.textContent = "Read";
+  }
 }
 
 // Removes book from array and ui.
@@ -123,8 +136,7 @@ function removeBook(deleteBookBtn, cardToDelete, newBook) {
 }
 
 // Allows user to toggle whether or not they have read the book.
-function readStatus(readBookBtn) {
-  readBookBtn.textContent = "Read";
+function readStatus(readBookBtn, newBook) {
   readBookBtn.addEventListener("click", () => {
     if (readBookBtn.textContent === "Read") {
       readBookBtn.textContent = "Not Read";
