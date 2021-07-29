@@ -1,10 +1,31 @@
-let myLibrary = [];
-restoreLocalStorage();
+class Book {
+  constructor(title, author, pages, isRead) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isRead = isRead;
+  }
+}
 
+class Library {
+  constructor() {
+    this.myLibrary = [];
+  }
+
+  pushBook(newBook) {
+    this.myLibrary.push(newBook);
+    console.log(library.myLibrary);
+  }
+}
+
+const library = new Library();
+
+restoreLocalStorage();
 // Saves data to local storage.
 function saveLocalStorage() {
-  localStorage.setItem("books", JSON.stringify(myLibrary));
+  localStorage.setItem("books", JSON.stringify(library.myLibrary));
 }
+
 // Returns value of key in storage
 function restoreLocalStorage() {
   const storageData = JSON.parse(localStorage.getItem("books"));
@@ -12,18 +33,10 @@ function restoreLocalStorage() {
     return;
   } else {
     for (let i = 0; i < storageData.length; i++) {
-      myLibrary.push(storageData[i]);
+      library.myLibrary.push(storageData[i]);
       displayBookValues(storageData[i]);
     }
   }
-}
-
-// Object Constructor.
-function Book(title, author, pages, isRead) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.isRead = isRead;
 }
 
 // Loads addBookToLibrary once 'add new book' button is clicked.
@@ -58,7 +71,7 @@ function submitForm() {
 
     e.preventDefault(); // Stops page from refreshing.
     const newBook = getBookFromInput();
-    myLibrary.push(newBook);
+    library.pushBook(newBook);
     saveLocalStorage();
     displayBookValues(newBook);
   });
@@ -84,8 +97,11 @@ function displayBookValues(newBook) {
   beenRead.setAttribute("id", "beenRead");
   removeBookBtn.setAttribute("id", "remove-book-btn");
   readBookBtn.setAttribute("id", "read-book-btn");
-  card.setAttribute("data-attribute", `${myLibrary.length - 1}`);
-  removeBookBtn.setAttribute("data-attribute", `${myLibrary.length - 1}`);
+  card.setAttribute("data-attribute", `${library.myLibrary.length - 1}`);
+  removeBookBtn.setAttribute(
+    "data-attribute",
+    `${library.myLibrary.length - 1}`
+  );
 
   bookTitle.textContent = newBook.title;
   bookAuthor.textContent = newBook.author;
@@ -127,8 +143,8 @@ function removeBook(deleteBookBtn, cardToDelete, newBook) {
       deleteBookBtn.getAttribute("data-attribute") ===
       cardToDelete.getAttribute("data-attribute")
     ) {
-      const index = myLibrary.indexOf(newBook);
-      myLibrary.splice(index, 1);
+      const index = library.myLibrary.indexOf(newBook);
+      library.myLibrary.splice(index, 1);
       cardToDelete.remove();
       saveLocalStorage();
     }
@@ -136,7 +152,7 @@ function removeBook(deleteBookBtn, cardToDelete, newBook) {
 }
 
 // Allows user to toggle whether or not they have read the book.
-function readStatus(readBookBtn, newBook) {
+function readStatus(readBookBtn) {
   readBookBtn.addEventListener("click", () => {
     if (readBookBtn.textContent === "Read") {
       readBookBtn.textContent = "Not Read";
